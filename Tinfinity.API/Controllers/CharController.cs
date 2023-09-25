@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using static Tinfinity.Application.Features.User.Queries.GetUser;
+using static Tinfinity.Application.Features.User.Queries.GetCharacter;
 
 namespace Tinfinity.API.Controllers
 {
@@ -10,7 +10,7 @@ namespace Tinfinity.API.Controllers
 		[HttpGet("GetUserBasicInfo/{name}")]
 		public async Task<IActionResult> GetUserBasicInfo(string name)
 		{
-			var res = await GetUserBasicData(name);
+			var res = await GetCharacterData(name);
 
 			if (res.Completed)
 				return Ok(res);

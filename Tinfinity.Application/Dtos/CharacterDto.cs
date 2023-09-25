@@ -1,6 +1,6 @@
 ﻿namespace Tinfinity.Application.Dtos
 {
-	public class CharacterDto
+	public class CharacterDto : ResponseDto
 	{
 		public string Name { get; set; } = null!;
 		public string God { get; set; } = null!;
