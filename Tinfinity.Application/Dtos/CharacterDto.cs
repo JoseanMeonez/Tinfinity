@@ -4,7 +4,7 @@
 	{
 		public string Name { get; set; } = null!;
 		public string God { get; set; } = null!;
-		public string Race { get; set; } = null!;
+		public string Tribe { get; set; } = null!;
 		public int Level { get; set; }
 		public string Class { get; set; } = null!;
 		public ZoneDto Zone { get; set; } = null!;

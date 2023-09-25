@@ -33,16 +33,21 @@ namespace Tinfinity.Application.Features.User.Queries
 					if (tad != null)
 					{
 						string character = ReplaceNulls(tad.Substring(88, 18));
-						string god = GetGodName(
-							int.Parse(Bin2Hex(tad.Substring(144, 1)), NumberStyles.Integer));
-						string charClass = GetClassName(
-							HexToInt(Bin2Hex(tad.Substring(116, 1)), 16));
+						string god = GodName(
+							int.Parse(Bin2Hex(tad.Substring(144, 1)), NumberStyles.HexNumber));
+						string tribe = TribeName(
+							int.Parse(Bin2Hex(tad.Substring(116, 1)), NumberStyles.HexNumber));
+						string charClass = ClassName(
+							int.Parse(Bin2Hex(tad.Substring(154, 1)), NumberStyles.Integer));
+						int lvl = int.Parse(Bin2Hex(tad.Substring(145, 1)), NumberStyles.HexNumber);
 
 						charInfo = new CharacterDto
 						{
 							Name = character,
 							God = god,
-							Class = charClass
+							Tribe = tribe,
+							Class = charClass,
+							Level = lvl
 						};
 					}
 				}
@@ -59,7 +64,7 @@ namespace Tinfinity.Application.Features.User.Queries
 			return charInfo;
 		}
 
-		public static string GetGodName(int god)
+		public static string GodName(int god)
 		{
 			string godname;
 			switch (god)
@@ -81,40 +86,76 @@ namespace Tinfinity.Application.Features.User.Queries
 			return godname;
 		}
 
-		public static string GetClassName(int charClass)
+		public static string TribeName(int tribe)
+		{
+			string tribename;
+			switch (tribe)
+			{
+				case 1:
+					tribename = "Bárbaro";
+					break;
+				case 2:
+					tribename = "Valkirya";
+					break;
+				case 4:
+					tribename = "Asesino";
+					break;
+				case 8:
+					tribename = "Amazona";
+					break;
+				case 16:
+					tribename = "Fighter";
+					break;
+				case 32:
+					tribename = "Akira";
+					break;
+				case 64:
+					tribename = "Mago";
+					break;
+				case 128:
+					tribename = "Sorceress";
+					break;
+				default:
+					tribename = "GM";
+					break;
+			}
+
+			return tribename;
+		}
+
+		public static string ClassName(int charClass)
 		{
 			string classname;
 			switch (charClass)
 			{
+				case 0:
+					classname = "Satya";
+					break;
 				case 1:
-					classname = "Bárbaro";
+					classname = "Banar";
 					break;
 				case 2:
-					classname = "Valkirya";
+					classname = "Druka";
+					break;
+				case 3:
+					classname = "Karya";
 					break;
 				case 4:
-					classname = "Asesino";
+					classname = "Nakayuda";
 					break;
-				case 8:
-					classname = "Amazona";
+				case 5:
+					classname = "Vidya";
 					break;
-				case 16:
-					classname = "Fighter";
+				case 6:
+					classname = "Abikara";
 					break;
-				case 32:
-					classname = "Akira";
-					break;
-				case 64:
-					classname = "Mago";
-					break;
-				case 128:
-					classname = "Sorceress";
+				case 7:
+					classname = "Samabat";
 					break;
 				default:
 					classname = "GM";
 					break;
 			}
-
 			return classname;
 		}
 	}
