@@ -32,22 +32,39 @@ namespace Tinfinity.Application.Features.User.Queries
 
 					if (tad != null)
 					{
+						// Simple values
 						string character = ReplaceNulls(tad.Substring(88, 18));
-						string god = GodName(
-							int.Parse(Bin2Hex(tad.Substring(144, 1)), NumberStyles.HexNumber));
-						string tribe = TribeName(
-							int.Parse(Bin2Hex(tad.Substring(116, 1)), NumberStyles.HexNumber));
-						string charClass = ClassName(
-							int.Parse(Bin2Hex(tad.Substring(154, 1)), NumberStyles.Integer));
 						int lvl = int.Parse(Bin2Hex(tad.Substring(145, 1)), NumberStyles.HexNumber);
+						int zoneId = int.Parse(Bin2Hex(tad.Substring(150, 1)), NumberStyles.HexNumber);
+
+						// Codified Names
+						string god = GodName(
+							int.Parse(Bin2Hex(tad.Substring(144, 1)),
+							NumberStyles.HexNumber));
+						string tribe = TribeName(
+							int.Parse(Bin2Hex(tad.Substring(116, 1)),
+							NumberStyles.HexNumber));
+						string charClass = ClassName(
+							int.Parse(Bin2Hex(tad.Substring(155, 1)),
+							NumberStyles.HexNumber));
+
+						var zone = new ZoneDto
+						{
+							Name = ZoneName(zoneId),
+							X = int.Parse(Bin2Hex(tad.Substring(160, 2)),
+								NumberStyles.HexNumber),
+							Y = int.Parse(Bin2Hex(tad.Substring(162, 2)),
+								NumberStyles.HexNumber),
+						};
 
 						charInfo = new CharacterDto
 						{
 							Name = character,
 							God = god,
 							Tribe = tribe,
+							Level = lvl,
 							Class = charClass,
-							Level = lvl
+							Zone = zone
 						};
 					}
 				}
@@ -157,6 +174,92 @@ namespace Tinfinity.Application.Features.User.Queries
 					break;
 			}
 			return classname;
+		}
+
+		public static string ZoneName(int zone)
+		{
+			string zoneName;
+
+			switch (zone)
+			{
+				case 1:
+					zoneName = "Aztlalan";
+					break;
+				case 2:
+					zoneName = "Uxmal";
+					break;
+				case 3:
+					zoneName = "Calabozo del jinete - Primera Sala";
+					break;
+				case 4:
+					zoneName = "Calabozo del jinete - Segunda Sala";
+					break;
+				case 5:
+					zoneName = "Calabozo del Uxmal - Primera Sala";
+					break;
+				case 6:
+					zoneName = "Calabozo de Uxmal - Segunda Sala";
+					break;
+				case 7:
+					zoneName = "Jinata";
+					break;
+				case 8:
+					zoneName = "Plandep";
+					break;
+				case 9:
+					zoneName = "Exilio";
+					break;
+				case 10:
+					zoneName = "Zona Dios (Nivel 60~Amara10)";
+					break;
+				case 11:
+					zoneName = "Chaturanga";
+					break;
+				case 12:
+					zoneName = "Entrada a Tumba del Emperador";
+					break;
+				case 13:
+					zoneName = "Karaya Nivel Bajo";
+					break;
+				case 14:
+					zoneName = "Karya Nivel Medio";
+					break;
+				case 15:
+					zoneName = "Karya Nivel Alto";
+					break;
+				case 16:
+					zoneName = "Nar Durga";
+					break;
+				case 17:
+					zoneName = "Viryu";
+					break;
+				case 18:
+					zoneName = "Atlan Bizarra";
+					break;
+				case 20:
+					zoneName = "Zona Dios (Nivel 30~59)";
+					break;
+				case 21:
+					zoneName = "Mudha";
+					break;
+				case 22:
+					zoneName = "Forge";
+					break;
+				case 24:
+					zoneName = "Ruins";
+					break;
+				case 26:
+					zoneName = "Ciudad Barbaro";
+					break;
+				case 28:
+					zoneName = "Calabozo de Ciudad Barbaro";
+					break;
+				default:
+					zoneName = "BUGUEADO";
+					break;
+			}
+
+			return zoneName;
 		}
 	}
 }
