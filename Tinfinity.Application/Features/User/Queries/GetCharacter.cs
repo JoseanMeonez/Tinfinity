@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using Tinfinity.Application.Dtos;
 using Tinfinity.Domain.Enums;
 using static Tinfinity.Utilities.Utilities;
@@ -17,7 +19,7 @@ namespace Tinfinity.Application.Features.User.Queries
 
 		public async static Task<CharacterDto> GetCharacterData(string name)
 		{
-			CharacterDto charInfo = null;
+			CharacterDto? charInfo = null;
 
 			try
 			{
@@ -34,27 +36,25 @@ namespace Tinfinity.Application.Features.User.Queries
 					{
 						// Simple values
 						string character = ReplaceNulls(tad.Substring(88, 18));
-						int lvl = int.Parse(Bin2Hex(tad.Substring(145, 1)), NumberStyles.HexNumber);
-						int zoneId = int.Parse(Bin2Hex(tad.Substring(150, 1)), NumberStyles.HexNumber);
+						int lvl = int.Parse(BinToHex(tad.Substring(145, 1)), NumberStyles.HexNumber);
+						int zoneId = int.Parse(BinToHex(tad.Substring(150, 1)), NumberStyles.HexNumber);
 
 						// Codified Names
 						string god = GodName(
-							int.Parse(Bin2Hex(tad.Substring(144, 1)),
+							int.Parse(BinToHex(tad.Substring(144, 1)),
 							NumberStyles.HexNumber));
 						string tribe = TribeName(
-							int.Parse(Bin2Hex(tad.Substring(116, 1)),
+							int.Parse(BinToHex(tad.Substring(116, 1)),
 							NumberStyles.HexNumber));
 						string charClass = ClassName(
-							int.Parse(Bin2Hex(tad.Substring(155, 1)),
+							int.Parse(BinToHex(tad.Substring(155, 1)),
 							NumberStyles.HexNumber));
 
 						var zone = new ZoneDto
 						{
 							Name = ZoneName(zoneId),
-							X = int.Parse(Bin2Hex(tad.Substring(160, 2)),
-								NumberStyles.HexNumber),
-							Y = int.Parse(Bin2Hex(tad.Substring(162, 2)),
-								NumberStyles.HexNumber),
+							X = HexToInt(BinToHex(tad.Substring(160, 2))),
+							Y = HexToInt(BinToHex(tad.Substring(162, 2))),
 						};
 
 						charInfo = new CharacterDto
