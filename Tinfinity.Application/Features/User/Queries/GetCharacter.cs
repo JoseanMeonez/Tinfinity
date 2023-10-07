@@ -49,6 +49,9 @@ namespace Tinfinity.Application.Features.User.Queries
 						string charClass = ClassName(
 							int.Parse(BinToHex(tad.Substring(155, 1)),
 							NumberStyles.HexNumber));
+						string regenerationZone = ZoneName(
+							int.Parse(BinToHex(tad.Substring(151, 1)),
+							NumberStyles.HexNumber));
 
 						var zone = new ZoneDto
 						{
@@ -64,7 +67,8 @@ namespace Tinfinity.Application.Features.User.Queries
 							Tribe = tribe,
 							Level = lvl,
 							Class = charClass,
-							Zone = zone
+							Zone = zone,
+							RegenerationZone = regenerationZone
 						};
 					}
 				}
@@ -255,7 +259,7 @@ namespace Tinfinity.Application.Features.User.Queries
 					zoneName = "Calabozo de Ciudad Barbaro";
 					break;
 				default:
-					zoneName = "BUGUEADO";
+					zoneName = "Bugueado";
 					break;
 			}
 
