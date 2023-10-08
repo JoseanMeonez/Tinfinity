@@ -9,6 +9,7 @@
 		public string Class { get; set; } = null!;
 		public ZoneDto Zone { get; set; } = null!;
 		public string RegenerationZone { get; set; } = null!;
+		public ChakrasDto Chakras { get; set; } = null!;
 		public int Gold { get; set; }
 		public int GodPoints { get; set; }
 		public int Pet { get; set; }
