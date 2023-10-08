@@ -8,7 +8,7 @@ namespace Tinfinity.Utilities
 		public static string ReplaceNulls(string str) => str.Replace("\0", "").Trim();
 		public static string BinToHex(string originalString)
 		{
-			// Convierte la cadena binaria a una cadena hexadecimal sin omitir ningún byte
+			// Convert original string to hex byte by byte
 			StringBuilder hex = new StringBuilder(originalString.Length * 2);
 			foreach (char c in originalString)
 			{
