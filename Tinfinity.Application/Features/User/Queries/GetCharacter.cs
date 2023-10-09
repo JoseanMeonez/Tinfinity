@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System.Globalization;
-using System.Security.Cryptography;
 using System.Text;
 using Tinfinity.Application.Dtos;
 using Tinfinity.Domain.Enums;
@@ -24,16 +23,18 @@ namespace Tinfinity.Application.Features.User.Queries
 			try
 			{
 				// Here we put the url were the files are staged
-				using (FileStream fileStream = new FileStream(
-					MainEnums.CharTadsUrl + $"{name}.TAD", FileMode.Open, FileAccess.Read))
-
-				using (StreamReader streamReader = new StreamReader(fileStream))
+				using (FileStream fileStream = new FileStream(MainEnums.CharTadsUrl + $"{name}.TAD", FileMode.Open, FileAccess.Read))
 				{
 					// Read the first line of the document
-					string tad = await streamReader.ReadLineAsync();
-
-					if (tad != null)
+					using (BinaryReader reader = new BinaryReader(fileStream))
 					{
+						// Define the buffer size to read data
+						int bufferSize = 7124;
+						byte[] buffer = new byte[bufferSize];
+						int bytesRead = reader.Read(buffer, 0, bufferSize);
+
+						string tad = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+
 						// Simple values
 						string character = ReplaceNulls(tad.Substring(88, 18));
 						int lvl = int.Parse(BinToHex(tad.Substring(145, 1)), NumberStyles.HexNumber);
@@ -68,7 +69,7 @@ namespace Tinfinity.Application.Features.User.Queries
 							Level = lvl,
 							Class = charClass,
 							Zone = zone,
-							RegenerationZone = regenerationZone
+							RegenerationZone = regenerationZone,
 						};
 					}
 				}
