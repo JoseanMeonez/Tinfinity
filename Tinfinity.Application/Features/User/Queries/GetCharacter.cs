@@ -61,6 +61,14 @@ namespace Tinfinity.Application.Features.User.Queries
 							Y = HexToInt(BinToHex(tad.Substring(162, 2))),
 						};
 
+						var chakras = new ChakrasDto
+						{
+							Muscle = HexToInt(BinToHex(tad.Substring(108, 2))),
+							Nerve = HexToInt(BinToHex(tad.Substring(110, 2))),
+							Heart = HexToInt(BinToHex(tad.Substring(112, 2))),
+							Mental = HexToInt(BinToHex(tad.Substring(114, 2))),
+						};
+
 						charInfo = new CharacterDto
 						{
 							Name = character,
@@ -70,6 +78,7 @@ namespace Tinfinity.Application.Features.User.Queries
 							Class = charClass,
 							Zone = zone,
 							RegenerationZone = regenerationZone,
+							Chakras = chakras
 						};
 					}
 				}
