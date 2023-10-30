@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.Globalization;
 using System.Text;
 using Tinfinity.Application.Dtos;
 using Tinfinity.Domain.Enums;
@@ -37,12 +36,12 @@ namespace Tinfinity.Application.Features.User.Queries
 
 						// Simple values
 						string character = ReplaceNulls(tad.Substring(88, 18));
-						int lvl = int.Parse(BinToHex(tad.Substring(145, 1)), NumberStyles.HexNumber);
-						int zoneId = int.Parse(BinToHex(tad.Substring(150, 1)), NumberStyles.HexNumber);
-						int gold = HexToGreaterInt(BinToHex(tad.Substring(132, 4)));
-						int godPoints = HexToGreaterInt(BinToHex(tad.Substring(136, 4)));
-						int pet = HexToInt(BinToHex(tad.Substring(1136, 2)));
-						int petLevel = int.Parse(BinToHex(tad.Substring(1279, 1)), NumberStyles.HexNumber);
+						int lvl = DecodeOneDigitNumber(tad.Substring(145, 1));
+						int zoneId = DecodeOneDigitNumber(tad.Substring(150, 1));
+						int gold = DecodeFourDigitNumber(tad.Substring(132, 4));
+						int godPoints = DecodeFourDigitNumber(tad.Substring(136, 4));
+						int pet = DecodeTwoDigitNumber(tad.Substring(1136, 2));
+						int petLevel = DecodeOneDigitNumber(tad.Substring(1279, 1));
 
 						// Equiped Items
 						var quantityList = new List<string>();
@@ -58,17 +57,13 @@ namespace Tinfinity.Application.Features.User.Queries
 
 						// Codified Names
 						string god = GodName(
-						int.Parse(BinToHex(tad.Substring(144, 1)),
-						NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(144, 1)));
 						string tribe = TribeName(
-							int.Parse(BinToHex(tad.Substring(116, 1)),
-							NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(116, 1)));
 						string charClass = ClassName(
-							int.Parse(BinToHex(tad.Substring(155, 1)),
-							NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(155, 1)));
 						string regenerationZone = ZoneName(
-							int.Parse(BinToHex(tad.Substring(151, 1)),
-							NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(151, 1)));
 
 						var zone = new ZoneDto
 						{
@@ -79,10 +74,10 @@ namespace Tinfinity.Application.Features.User.Queries
 
 						var chakras = new ChakrasDto
 						{
-							Muscle = HexToInt(BinToHex(tad.Substring(108, 2))),
-							Nerve = HexToInt(BinToHex(tad.Substring(110, 2))),
-							Heart = HexToInt(BinToHex(tad.Substring(112, 2))),
-							Mental = HexToInt(BinToHex(tad.Substring(114, 2))),
+							Muscle = DecodeTwoDigitNumber(tad.Substring(108, 2)),
+							Nerve = DecodeTwoDigitNumber(tad.Substring(110, 2)),
+							Heart = DecodeTwoDigitNumber(tad.Substring(112, 2)),
+							Mental = DecodeTwoDigitNumber(tad.Substring(114, 2)),
 						};
 
 						charInfo = new CharacterDto
