@@ -14,6 +14,6 @@
 		public int GodPoints { get; set; }
 		public int Pet { get; set; }
 		public int PetLvl { get; set; }
-		public List<int> Equipment { get; set; } = new List<int>();
+		public List<EquipmentDto> Equipment { get; set; } = new List<EquipmentDto>();
 	}
 }
