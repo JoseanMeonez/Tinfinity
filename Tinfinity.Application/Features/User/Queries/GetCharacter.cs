@@ -33,17 +33,33 @@ namespace Tinfinity.Application.Features.User.Queries
 						byte[] buffer = new byte[bufferSize];
 						int bytesRead = reader.Read(buffer, 0, bufferSize);
 
-						string tad = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+						string tad = Encoding.Latin1.GetString(buffer, 0, bytesRead);
 
 						// Simple values
 						string character = ReplaceNulls(tad.Substring(88, 18));
 						int lvl = int.Parse(BinToHex(tad.Substring(145, 1)), NumberStyles.HexNumber);
 						int zoneId = int.Parse(BinToHex(tad.Substring(150, 1)), NumberStyles.HexNumber);
+						int gold = HexToGreaterInt(BinToHex(tad.Substring(132, 4)));
+						int godPoints = HexToGreaterInt(BinToHex(tad.Substring(136, 4)));
+						int pet = HexToInt(BinToHex(tad.Substring(1136, 2)));
+						int petLevel = int.Parse(BinToHex(tad.Substring(1279, 1)), NumberStyles.HexNumber);
+
+						// Equiped Items
+						var quantityList = new List<string>();
+						var refinedList = new List<string>();
+						var namesList = new List<string>();
+						for (int i = 0; i < 16; i++)
+						{
+							quantityList.Add(tad.Substring(1520, 2));
+							refinedList.Add(tad.Substring(1528, 1));
+							namesList.Add(tad.Substring(1535, 1));
+						}
+						var equipment = GetEquipment(quantityList, refinedList, namesList);
 
 						// Codified Names
 						string god = GodName(
-							int.Parse(BinToHex(tad.Substring(144, 1)),
-							NumberStyles.HexNumber));
+						int.Parse(BinToHex(tad.Substring(144, 1)),
+						NumberStyles.HexNumber));
 						string tribe = TribeName(
 							int.Parse(BinToHex(tad.Substring(116, 1)),
 							NumberStyles.HexNumber));
@@ -78,7 +94,12 @@ namespace Tinfinity.Application.Features.User.Queries
 							Class = charClass,
 							Zone = zone,
 							RegenerationZone = regenerationZone,
-							Chakras = chakras
+							Chakras = chakras,
+							Gold = gold,
+							GodPoints = godPoints,
+							Pet = pet,
+							PetLvl = petLevel,
+							Equipment = equipment,
 						};
 					}
 				}
@@ -87,7 +108,7 @@ namespace Tinfinity.Application.Features.User.Queries
 			{
 				charInfo = new CharacterDto
 				{
-					Message = $"No se encontró el personaje: {name}",
+					Message = $"No se encontró el usuario: {name}",
 					Completed = false
 				};
 			}
