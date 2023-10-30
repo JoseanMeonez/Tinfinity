@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.Globalization;
 using System.Text;
 using Tinfinity.Application.Dtos;
 using Tinfinity.Domain.Enums;
@@ -33,26 +32,38 @@ namespace Tinfinity.Application.Features.User.Queries
 						byte[] buffer = new byte[bufferSize];
 						int bytesRead = reader.Read(buffer, 0, bufferSize);
 
-						string tad = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+						string tad = Encoding.Latin1.GetString(buffer, 0, bytesRead);
 
 						// Simple values
 						string character = ReplaceNulls(tad.Substring(88, 18));
-						int lvl = int.Parse(BinToHex(tad.Substring(145, 1)), NumberStyles.HexNumber);
-						int zoneId = int.Parse(BinToHex(tad.Substring(150, 1)), NumberStyles.HexNumber);
+						int lvl = DecodeOneDigitNumber(tad.Substring(145, 1));
+						int zoneId = DecodeOneDigitNumber(tad.Substring(150, 1));
+						int gold = DecodeFourDigitNumber(tad.Substring(132, 4));
+						int godPoints = DecodeFourDigitNumber(tad.Substring(136, 4));
+						int pet = DecodeTwoDigitNumber(tad.Substring(1136, 2));
+						int petLevel = DecodeOneDigitNumber(tad.Substring(1279, 1));
+
+						// Equiped Items
+						var quantityList = new List<string>();
+						var refinedList = new List<string>();
+						var namesList = new List<string>();
+						for (int i = 0; i < 16; i++)
+						{
+							quantityList.Add(tad.Substring(1520, 2));
+							refinedList.Add(tad.Substring(1528, 1));
+							namesList.Add(tad.Substring(1535, 1));
+						}
+						var equipment = GetEquipment(quantityList, refinedList, namesList);
 
 						// Codified Names
 						string god = GodName(
-							int.Parse(BinToHex(tad.Substring(144, 1)),
-							NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(144, 1)));
 						string tribe = TribeName(
-							int.Parse(BinToHex(tad.Substring(116, 1)),
-							NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(116, 1)));
 						string charClass = ClassName(
-							int.Parse(BinToHex(tad.Substring(155, 1)),
-							NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(155, 1)));
 						string regenerationZone = ZoneName(
-							int.Parse(BinToHex(tad.Substring(151, 1)),
-							NumberStyles.HexNumber));
+							DecodeOneDigitNumber(tad.Substring(151, 1)));
 
 						var zone = new ZoneDto
 						{
@@ -63,10 +74,10 @@ namespace Tinfinity.Application.Features.User.Queries
 
 						var chakras = new ChakrasDto
 						{
-							Muscle = HexToInt(BinToHex(tad.Substring(108, 2))),
-							Nerve = HexToInt(BinToHex(tad.Substring(110, 2))),
-							Heart = HexToInt(BinToHex(tad.Substring(112, 2))),
-							Mental = HexToInt(BinToHex(tad.Substring(114, 2))),
+							Muscle = DecodeTwoDigitNumber(tad.Substring(108, 2)),
+							Nerve = DecodeTwoDigitNumber(tad.Substring(110, 2)),
+							Heart = DecodeTwoDigitNumber(tad.Substring(112, 2)),
+							Mental = DecodeTwoDigitNumber(tad.Substring(114, 2)),
 						};
 
 						charInfo = new CharacterDto
@@ -78,7 +89,12 @@ namespace Tinfinity.Application.Features.User.Queries
 							Class = charClass,
 							Zone = zone,
 							RegenerationZone = regenerationZone,
-							Chakras = chakras
+							Chakras = chakras,
+							Gold = gold,
+							GodPoints = godPoints,
+							Pet = pet,
+							PetLvl = petLevel,
+							Equipment = equipment,
 						};
 					}
 				}
@@ -87,7 +103,7 @@ namespace Tinfinity.Application.Features.User.Queries
 			{
 				charInfo = new CharacterDto
 				{
-					Message = $"No se encontró el personaje: {name}",
+					Message = $"No se encontró el usuario: {name}",
 					Completed = false
 				};
 			}
