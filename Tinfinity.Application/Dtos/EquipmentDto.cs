@@ -2,8 +2,9 @@
 {
 	public class EquipmentDto
 	{
-		public string Name { get; set; } = null!;
-		public int Quantity { get; set; }
+		public int Name { get; set; }
+		//public string Name { get; set; } = null!;
+		public object Quantity { get; set; } = null!;
 		public int Refined { get; set; }
 	}
 }
